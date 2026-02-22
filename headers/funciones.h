@@ -1,12 +1,6 @@
 #ifndef FUNCIONES_H
 #define FUNCIONES_H
 
-#define CHAR 1
-#define INT 2
-#define FLOAT 3
-#define DOUBLE 4
-#define LONG 5
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

@@ -59,12 +59,12 @@ char *nombre(){
 
 void capturar(char *nombre_archivo){
 
-    void *dato;
-
-    TRegistros registro;
-
+    TRegistros registro; 
     int opcion;
     FILE *f;
+
+    memset(registro.basurero, 0, sizeof(registro.basurero));
+
     f = fopen(nombre_archivo, "ab+");
     if(!f){
         printf("Error el archivo no pudo ser abierto");
@@ -73,9 +73,44 @@ void capturar(char *nombre_archivo){
 
     opcion = menu_tipo_dato();
     registro.tipo = opcion;
-    dato = crea_dato_generico(opcion);
+    
+    if(opcion == 1){
+        //Enteros
+        int valor;
+        printf("Ingresa el valor del numero: ");
+        scanf("%d", &valor);
+        memcpy(registro.basurero, &valor, sizeof(int));
+    }else if(opcion == 2){
+        //Flotantes
+        float valor;
+        printf("Ingresa el valor del numero: ");
+        scanf("%d", &valor);
+        memcpy(registro.basurero, &valor, sizeof(float));
+    }else if(opcion == 3){
+        //Caracteres o cadenas
+        printf("Ingresa tu cadena de caracteres: ");
+        scanf("%50[^\n]", registro.basurero);
+        memcpy(registro.basurero, &registro.basurero, sizeof(char)*50);
+    }else if(opcion == 4){
+        //Double
+        double valor;
+        printf("Ingresa el valor del numero: ");
+        scanf("%lf", &valor);
+        memcpy(registro.basurero, &valor, sizeof(double));
+    }else if(opcion == 5){
+        //long
+        long valor;
+        printf("Ingresa el valor del numero: ");
+        scanf("%ld", &valor);
+        memcpy(registro.basurero, &valor, sizeof(long));
+    }else{
 
+        printf("Error: La opcion que introduciste es NO VALIDA");
 
+    }
+
+    fwrite(&registro, sizeof(registro), 1, f);
+    fclose(f);
 
 }
 
@@ -88,37 +123,6 @@ void consultar(char *nombre_archivo){
         return;
     }
 
-}
-
-void *crea_dato_generico(int tipo){
-
-    void *ptr;
-    int tam;
-
-    switch (tipo){
-        case INT:
-            ptr = malloc(sizeof(int));
-            break;
-        
-        case FLOAT:
-            ptr = malloc(sizeof(float));
-            break;
-
-        case CHAR:
-            ptr = malloc(sizeof(char));
-            break;
-        
-        case DOUBLE:
-            ptr = malloc(sizeof(double));
-            break;
-        
-        case LONG:
-            ptr = malloc(sizeof(long));
-        default:
-            break;
-        }
-
-    return ptr;
 }
 
 int menu_tipo_dato(){
