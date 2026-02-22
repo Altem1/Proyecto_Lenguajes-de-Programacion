@@ -6,8 +6,8 @@ int menu_principal(){
 
     printf("Bienvenido! \n Selecciones una opcion: \n");
     printf("\t1- Crear un nuevo archivo\n");
-    printf("\t2- Abrir un archivo existente");
-    printf("\t3.- Salir");
+    printf("\t2- Abrir un archivo existente\n");
+    printf("\t3.- Salir\n");
     printf("\t Ingresa tu seleccion: ");
     scanf("%d", &op);
     return(op);
@@ -20,8 +20,8 @@ int menu_secundario(){
 
     printf("Selecciones una opcion: \n");
     printf("\t1- Capturar\n");
-    printf("\t2- Consultar");
-    printf("\t3.- Regresar al menu anterior");
+    printf("\t2- Consultar\n");
+    printf("\t3.- Regresar al menu anterior\n");
     printf("\t Ingresa tu seleccion: ");
     scanf("%d", &op);
     return(op);
@@ -52,7 +52,7 @@ char *crear_ar(){
 char *nombre(){
 
     char *nombre_archivo = (char *)malloc(100*sizeof(char));
-    printf("Ingresa el nombre del nuevo archivo\nDe preferencia sin espacios o usa '- , _' ");
+    printf("Ingresa el nombre del archivo\nDe preferencia sin espacios o usa '- , _' \n:");
     scanf("%99s", nombre_archivo);
     return nombre_archivo;
 }
@@ -84,13 +84,15 @@ void capturar(char *nombre_archivo){
         //Flotantes
         float valor;
         printf("Ingresa el valor del numero: ");
-        scanf("%d", &valor);
+        scanf("%f", &valor);
         memcpy(registro.basurero, &valor, sizeof(float));
     }else if(opcion == 3){
         //Caracteres o cadenas
-        printf("Ingresa tu cadena de caracteres: ");
-        scanf("%50[^\n]", registro.basurero);
-        memcpy(registro.basurero, &registro.basurero, sizeof(char)*50);
+        char aux_texto[50];
+        printf("Ingresa el texto: ");
+        scanf(" %49[^\n]", aux_texto);
+
+        memcpy(registro.basurero, aux_texto, sizeof(char) * 50);
     }else if(opcion == 4){
         //Double
         double valor;
@@ -114,17 +116,6 @@ void capturar(char *nombre_archivo){
 
 }
 
-void consultar(char *nombre_archivo){
-
-    FILE *f;
-    f = fopen(nombre_archivo, "ab+");
-    if(!f){
-        printf("Error el archivo no pudo ser abierto");
-        return;
-    }
-
-}
-
 int menu_tipo_dato(){
 
     int op;
@@ -139,4 +130,75 @@ int menu_tipo_dato(){
     scanf("%d", &op);
 
     return op;
+}
+
+void consultar(char *nombre_archivo) {
+
+    int indice;
+    printf("¿Que numero de registro quieres consultar? (0, 1, 2...): ");
+    scanf("%d", &indice);
+
+    FILE *f = fopen(nombre_archivo, "rb");
+    if (!f) return;
+
+    fseek(f, 0, SEEK_END);
+    long tamano_total = ftell(f);
+    int total_registros = tamano_total / sizeof(TRegistros);
+
+    if (indice < 0 || indice >= total_registros) {
+        //Validar que ese registro existe
+        printf("Error: Ese registro no existe. Total de registros: %d\n", total_registros);
+        fclose(f);
+        return;
+    }
+
+    //me muevo al lugar donde esta
+    fseek(f, indice * sizeof(TRegistros), SEEK_SET);
+
+    //creo un struct auxiliar para copiar la informacion
+    TRegistros aux;
+    fread(&aux, sizeof(TRegistros), 1, f);
+
+    //Le doy informacion sobre el registro
+    printf("\nRegistro #%d - Tipo [%d]: ", indice, aux.tipo);
+    
+    //dependiendo el tipo de dato le muestro en pantalla el dato
+    if (aux.tipo == 1) { 
+        //Entero
+        int val;
+        memcpy(&val, aux.basurero, sizeof(int));
+        printf("%d\n", val);
+    }else if (aux.tipo == 2) {
+        //Flotante
+        float val;
+        memcpy(&val, aux.basurero, sizeof(float));
+        printf("%f\n", val);
+    }else if(aux.tipo == 3) {
+        //caracter
+        printf("%s\n", aux.basurero);
+    }else if(aux.tipo == 4){
+        //double
+        double val;
+        memcpy(&val, aux.basurero, sizeof(double));
+        printf("%lf\n", val);
+    }else if(aux.tipo == 5){
+        //long
+        long val;
+        memcpy(&val, aux.basurero, sizeof(long));
+        printf("%ld\n", val);
+
+    }
+
+    fclose(f);
+}
+
+void limpiar_y_pausar() {
+    printf("\nPresiona Enter para continuar...");
+    fflush(stdout);
+    
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF); 
+    getchar();
+    
+    printf("\033[H\033[J"); 
 }

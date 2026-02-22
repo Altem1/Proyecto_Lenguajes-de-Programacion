@@ -8,7 +8,7 @@
 
 typedef struct{
     int tipo;
-    char basurero;
+    char basurero[100];
 }TRegistros;
 
 char *nombre();
@@ -17,7 +17,7 @@ void capturar(char *nombre_archivo);
 void consultar(char *nombre_archivo);
 int menu_principal();
 int menu_secundario();
-void *crea_dato_generico(int tipo);
 int menu_tipo_dato();
+void limpiar_y_pausar();
 
 #endif

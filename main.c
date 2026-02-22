@@ -1,65 +1,36 @@
 #include "headers/funciones.h"
 
 int main(){
-
     int opcion_principal, opcion_secundaria;
-    char *nombre_archivo;
+    char *nombre_archivo = NULL;
 
-    do{
+    do {
+        opcion_principal = menu_principal();
+        if ((opcion_principal == 1 || opcion_principal == 2)) {
+            nombre_archivo = (opcion_principal == 1) ? crear_ar() : nombre();
+            if (nombre_archivo == NULL) continue;
 
-        opcion_principal=menu_principal();
+            do {
+                opcion_secundaria = menu_secundario();
+                switch (opcion_secundaria) {
+                    case 1:
+                        capturar(nombre_archivo);
+                        limpiar_y_pausar(); 
+                        break;
+                    case 2: 
+                        consultar(nombre_archivo);
+                        limpiar_y_pausar(); 
+                        break;
+                    case 3:
+                        printf("Regresando...\n");
+                        break;
+                }
+            } while(opcion_secundaria != 3);
 
-        switch (opcion_principal){
-            case 1:
-                nombre_archivo = crear_ar();
-                //Crear nuevo archivo
-                do{
-                    opcion_secundaria = menu_secundario();
-                    //por mientras hago el switch aqui luego optimizo
-                    switch (opcion_secundaria){
-                        case 1:
-                            //capturar
-                            break;
-                        
-                        case 2: 
-                            //consultar
-                        default:
-                            printf("Regresando el menu anterior");
-                            break;
-                            return;
-                    }
-
-                }while(opcion_secundaria > 0 && opcion_principal < 3);
-                free(nombre);
-                break;
-            case 2: 
-                nombre_archivo = nombre();
-                //Abrir un archivo existente
-                 do{
-                    opcion_secundaria = menu_secundario();
-                    //por mientras hago el switch aqui luego optimizo
-                    switch (opcion_secundaria){
-                        case 1:
-                            //capturar
-                            break;
-                        
-                        case 2: 
-                            //consultar
-                        default:
-                            printf("Regresando el menu anterior");
-                            break;
-                            return;
-                    }
-
-                }while(opcion_secundaria > 0 && opcion_principal < 3);
-                break;
-            default:
-                printf("Saliendo del menu principal");
-                break;
+            free(nombre_archivo);
+            nombre_archivo = NULL;
         }
-
-    }while (opcion_principal < 3 && opcion_principal > 0);
+    } while (opcion_principal != 3);
     
-
+    return 0;
 }
-
