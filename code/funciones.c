@@ -68,6 +68,9 @@ char *nombre(){
 
     //regresamos el nombre con la direccion de la carpeta y nombre del archivo
     //se hace unicamente en  esta funcion al ser la funcion raiz de main
+
+    free(buffer);
+
     return nombre_archivo;
 }
 
