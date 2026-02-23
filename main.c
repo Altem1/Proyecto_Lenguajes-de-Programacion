@@ -1,3 +1,7 @@
+//Jose Emilio Antonio Jimenez
+/*Programa compilado en sistema linux con algunas 
+    sin uso de funciones de este SO*/
+    
 #include "headers/funciones.h"
 
 int main(){

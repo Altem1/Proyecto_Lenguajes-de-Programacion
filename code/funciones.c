@@ -32,6 +32,7 @@ char *crear_ar(){
 
     //Datos necesarios dentro de la funcion
     char *nombre_archivo = nombre ();
+    
     //Creando el archivo
     FILE *f;
     f = fopen(nombre_archivo, "wb+");
@@ -50,10 +51,23 @@ char *crear_ar(){
 }
 
 char *nombre(){
-
-    char *nombre_archivo = (char *)malloc(100*sizeof(char));
+    //se crea el buffer el nombre del archivo para darle uso
+    char *buffer = (char *)malloc(100*sizeof(char));
+    if(buffer == NULL) return NULL;
+    
     printf("Ingresa el nombre del archivo\nDe preferencia sin espacios o usa '- , _' \n:");
-    scanf("%99s", nombre_archivo);
+    scanf("%99s", buffer);
+
+    //creamos el puntero nombre_archivo 
+    char *nombre_archivo = (char *)malloc(256 * sizeof(char));
+    if (nombre_archivo == NULL) return NULL;
+
+    //creamos la cadena donde se guardara la direccion completa de donde estara el archivo
+    //es como concatenar pero poder asignar un tipo a un puntero en este caso %s
+    sprintf(nombre_archivo, "Archivos/%s", buffer);
+
+    //regresamos el nombre con la direccion de la carpeta y nombre del archivo
+    //se hace unicamente en  esta funcion al ser la funcion raiz de main
     return nombre_archivo;
 }
 
@@ -135,6 +149,7 @@ int menu_tipo_dato(){
 void consultar(char *nombre_archivo) {
 
     int indice;
+
     printf("¿Que numero de registro quieres consultar? (0, 1, 2...): ");
     scanf("%d", &indice);
 

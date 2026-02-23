@@ -1,5 +1,5 @@
 # Nombre del ejecutable final
-TARGET = programa
+TARGET = programa.out
 
 # Compilador y banderas
 CC = gcc
